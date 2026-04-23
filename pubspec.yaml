@@ -1,5 +1,5 @@
-name: template
-description: Flutter стартовый шаблон — Clean Architecture, BLoC, Drift, GoRouter.
+name: fintrack
+description: Personal Finance Tracking App for DataGroup Academy
 publish_to: 'none'
 version: 1.0.0+1
 
