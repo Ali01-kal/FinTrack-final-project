@@ -1,60 +1,60 @@
-// Слой: presentation | Назначение: события ItemBloc
+// // Слой: presentation | Назначение: события ItemBloc
 
-part of 'item_bloc.dart';
+// part of 'item_bloc.dart';
 
-abstract class ItemEvent extends Equatable {
-  const ItemEvent();
+// abstract class ItemEvent extends Equatable {
+//   const ItemEvent();
 
-  @override
-  List<Object?> get props => [];
-}
+//   @override
+//   List<Object?> get props => [];
+// }
 
-class ItemLoaded extends ItemEvent {
-  const ItemLoaded();
-}
+// class ItemLoaded extends ItemEvent {
+//   const ItemLoaded();
+// }
 
-class ItemCreated extends ItemEvent {
-  const ItemCreated({required this.title, this.description});
+// class ItemCreated extends ItemEvent {
+//   const ItemCreated({required this.title, this.description});
 
-  final String title;
-  final String? description;
+//   final String title;
+//   final String? description;
 
-  @override
-  List<Object?> get props => [title, description];
-}
+//   @override
+//   List<Object?> get props => [title, description];
+// }
 
-class ItemUpdated extends ItemEvent {
-  const ItemUpdated(this.item);
+// class ItemUpdated extends ItemEvent {
+//   const ItemUpdated(this.item);
 
-  final Item item;
+//   final Item item;
 
-  @override
-  List<Object?> get props => [item];
-}
+//   @override
+//   List<Object?> get props => [item];
+// }
 
-class ItemDeleted extends ItemEvent {
-  const ItemDeleted(this.id);
+// class ItemDeleted extends ItemEvent {
+//   const ItemDeleted(this.id);
 
-  final int id;
+//   final int id;
 
-  @override
-  List<Object?> get props => [id];
-}
+//   @override
+//   List<Object?> get props => [id];
+// }
 
-class ItemSearched extends ItemEvent {
-  const ItemSearched(this.query);
+// class ItemSearched extends ItemEvent {
+//   const ItemSearched(this.query);
 
-  final String query;
+//   final String query;
 
-  @override
-  List<Object?> get props => [query];
-}
+//   @override
+//   List<Object?> get props => [query];
+// }
 
-class ItemFiltered extends ItemEvent {
-  const ItemFiltered(this.status);
+// class ItemFiltered extends ItemEvent {
+//   const ItemFiltered(this.status);
 
-  final ItemStatus status;
+//   final ItemStatus status;
 
-  @override
-  List<Object?> get props => [status];
-}
+//   @override
+//   List<Object?> get props => [status];
+// }

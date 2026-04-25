@@ -1,17 +1,22 @@
-// Слой: domain | Назначение: абстрактный интерфейс репозитория авторизации
-
-import '../entities/user.dart';
+import '../entities/transaction_entity.dart'; // Егер кейін керек болса
 
 abstract class AuthRepository {
-  Future<User> login({required String email, required String password});
-
-  Future<User> register({
+  // Тіркелу
+  Future<void> register({
     required String name,
     required String email,
     required String password,
   });
 
-  Future<User?> checkSession();
+  // Кіру
+  Future<void> login({
+    required String email,
+    required String password,
+  });
 
+  // Шығу
   Future<void> logout();
+
+  // Сессияны тексеру
+  Future<bool> isAuthenticated();
 }

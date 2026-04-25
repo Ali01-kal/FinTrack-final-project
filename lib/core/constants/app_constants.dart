@@ -12,6 +12,7 @@ class AppConstants {
 
   // Маршруты
   static const String routeSplash = '/splash';
+  static const String routeWelcome = '/welcome';
   static const String routeLogin = '/login';
   static const String routeRegister = '/register';
   static const String routeHome = '/home';

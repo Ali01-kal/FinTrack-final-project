@@ -1,40 +1,40 @@
-// Слой: presentation | Назначение: состояния AuthBloc
+// // Слой: presentation | Назначение: состояния AuthBloc
 
-part of 'auth_bloc.dart';
+// part of 'auth_bloc.dart';
 
-abstract class AuthState extends Equatable {
-  const AuthState();
+// abstract class AuthState extends Equatable {
+//   const AuthState();
 
-  @override
-  List<Object?> get props => [];
-}
+//   @override
+//   List<Object?> get props => [];
+// }
 
-class AuthInitial extends AuthState {
-  const AuthInitial();
-}
+// class AuthInitial extends AuthState {
+//   const AuthInitial();
+// }
 
-class AuthLoading extends AuthState {
-  const AuthLoading();
-}
+// class AuthLoading extends AuthState {
+//   const AuthLoading();
+// }
 
-class AuthAuthenticated extends AuthState {
-  const AuthAuthenticated(this.user);
+// class AuthAuthenticated extends AuthState {
+//   const AuthAuthenticated(this.user);
 
-  final User user;
+//   final User user;
 
-  @override
-  List<Object?> get props => [user];
-}
+//   @override
+//   List<Object?> get props => [user];
+// }
 
-class AuthUnauthenticated extends AuthState {
-  const AuthUnauthenticated();
-}
+// class AuthUnauthenticated extends AuthState {
+//   const AuthUnauthenticated();
+// }
 
-class AuthError extends AuthState {
-  const AuthError(this.message);
+// class AuthError extends AuthState {
+//   const AuthError(this.message);
 
-  final String message;
+//   final String message;
 
-  @override
-  List<Object?> get props => [message];
-}
+//   @override
+//   List<Object?> get props => [message];
+// }
