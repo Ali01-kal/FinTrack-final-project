@@ -88,7 +88,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       width: double.infinity,
                       height: 55,
                       child: ElevatedButton(
-                        onPressed: (){}, 
+                        onPressed: (){
+                          context.go('/home');
+                        }, 
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber,
                           shape: RoundedRectangleBorder(

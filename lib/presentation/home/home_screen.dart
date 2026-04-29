@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:path/path.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -6,40 +8,268 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FinTrack'),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          // Жалпы баланс карточкасы (Заглушка)
-          Card(
-            margin: const EdgeInsets.all(16),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              child: const Column(
+      backgroundColor: Colors.amber,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Жалпы баланс', style: TextStyle(fontSize: 16)),
-                  SizedBox(height: 8),
-                  Text('\$12,450.00', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hi Welcome Back',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+
+                      Text(
+                        'Good Morning',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white,
+                    ),
+                    child: IconButton(onPressed: (){
+                      context.go('/notifications');
+                    }, icon: Icon(Icons.notifications_none,color: Colors.black,),
+                    ),
+                  )
                 ],
               ),
             ),
-          ),
-          const Expanded(
-            child: Center(
-              child: Text('Транзакциялар тізімі әзірге бос'),
+
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildBalanceInfo(context, 'Total Balance','\$7,783.00',Colors.white),
+                  Container(width: 1,height: 40,color: Colors.white,),
+                  _buildBalanceInfo(context, 'Total Expence','-\$1.187.40',const Color(0xFF1B3D3D)),
+                ],
+              ),
             ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        height: 12,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+
+                      Container(
+                        height: 12,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF1B3D3D),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      )
+                    ],
+                  ),
+
+                  const SizedBox(height: 8,),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('30%', style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                      Text('\$20,000.00',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                    ],
+                  )
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 20,),
+
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+                ),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(25),
+                  child: Column(
+                    children: [
+                      //week
+                      _buildWeeklyStatsCard(context),
+                      const SizedBox(height: 20,),
+
+                      //time a choose (Daily,Weekly,Monthly)
+                      _buildPeriodSelector(),
+                      const SizedBox(height: 20,),
+
+                      //List transaction
+                      _buildTransactionItem('Salary','Monthly','\$4,000.00',Icons.account_balance_wallet,Colors.blue),
+                      _buildTransactionItem('Groceries', 'Pantry', '-\$100.00', Icons.shopping_bag, Colors.orange),
+                      _buildTransactionItem('Rent', 'Rent', '-\$674.40', Icons.vpn_key, Colors.indigo),
+                    ],
+                  ),
+                ),
+              ))
+          ],
+        )
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF00D19E),
+        unselectedItemColor: Colors.black,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        currentIndex: 0,
+        onTap: (index) {
+          if(index == 0) context.go('/home');
+          if (index == 1) { // Екінші иконка - Analysis
+              context.go('/analysis');
+          }
+          if(index == 2) context.go('/transaction');
+          if(index == 3) context.go('/categories');
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
+          BottomNavigationBarItem(icon: Icon(Icons.swap_horiz), label: 'Transfer'),
+          BottomNavigationBarItem(icon: Icon(Icons.layers), label: 'Cards'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: 'Profile'),
+        ]
+      ),
+    );
+  }
+  
+  Widget _buildBalanceInfo(BuildContext context, String title,String amount,Color amountColor){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+             IconButton(onPressed: (){
+              context.go('/accountBalance');
+             }, icon: Icon(Icons.analytics_outlined,size: 14,color: Colors.black,)),
+            const SizedBox(width: 5,),
+            Text(title,style: TextStyle(color: Colors.black),)
+          ],
+        ),
+        Text(
+          amount,
+          style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: amountColor),
+        )
+      ],
+    );
+  }
+
+  Widget _buildWeeklyStatsCard(BuildContext context) { // context қосуды ұмытпа
+  return GestureDetector(
+    onTap: () {
+      // Осы жерде өзің жасаған 'Quickly Analysis' бетінің бағытын (path) жаз
+      context.push('/quiklyanalytics'); 
+    },
+    child: Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF00D19E),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Row(
+        children: [
+          const CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.directions_car, color: Color(0xFF00D19E)), // Түсін жасыл қылсаң жақсы көрінеді
           ),
+          const SizedBox(width: 15),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Revenue Last Week', style: TextStyle(color: Colors.black54, fontSize: 12)),
+                Text('\$4,000.00', style: TextStyle(color: Color(0xFF1B3D3D), fontWeight: FontWeight.bold, fontSize: 18)),
+                Divider(color: Colors.white30),
+                Text('Food Last Week', style: TextStyle(color: Colors.black54, fontSize: 12)),
+                Text('-\$100.00', style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: 18)),
+              ],
+            ),
+          )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Транзакция қосу экранына өту (кейінірек)
-        },
-        child: const Icon(Icons.add),
+    ),
+  );
+}
+
+  Widget _buildTransactionItem(String title,String category,String amount,IconData icon,Color iconBg){
+    return Container(
+      margin: EdgeInsets.only(bottom: 15),
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
       ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: iconBg.withOpacity(0.1),
+            child: Icon(icon,color: iconBg,),
+          ),
+          const SizedBox(width: 15,),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,style: TextStyle(fontWeight: FontWeight.bold),),
+                Text(category,style: TextStyle(color: Colors.black,fontSize: 12),),
+              ],
+            )),
+
+            Text(
+              amount,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: amount.startsWith('-') ? Colors.blueAccent : Colors.black,
+              ),
+            )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPeriodSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+         const Text('Daily', style: TextStyle(color: Colors.black)),
+         const Text('Weekly', style: TextStyle(color: Colors.black)),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF00D19E),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: const Text('Monthly', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ),
+      ],
     );
   }
 }

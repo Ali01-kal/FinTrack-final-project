@@ -81,8 +81,18 @@
 
 
 
+import 'package:fintrack/presentation/account/account_balance.dart';
+import 'package:fintrack/presentation/analysis/analysis_screen.dart';
+import 'package:fintrack/presentation/analysis/calendar_screen.dart';
+import 'package:fintrack/presentation/analysis/quikly_analysis_screen.dart';
+import 'package:fintrack/presentation/analysis/search_screen.dart';
 import 'package:fintrack/presentation/auth/welcome_screen.dart';
+import 'package:fintrack/presentation/categories/add_expences.dart';
+import 'package:fintrack/presentation/categories/categories_screen.dart';
+import 'package:fintrack/presentation/categories/food_screen.dart';
+import 'package:fintrack/presentation/notifications/notifications_screen.dart';
 import 'package:fintrack/presentation/splash/splash_screen.dart';
+import 'package:fintrack/presentation/transactions/transactions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/app_constants.dart';
@@ -117,8 +127,44 @@ final AppRouter = GoRouter(
       builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
-      path: AppConstants.routeAnalytics,
-      builder: (context, state) => const StatisticsScreen(),
+      path: AppConstants.routeNotifications,
+      builder: (context, state) => const NotificationScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeAccountBalance,
+      builder: (context, state) => const AccountBalanceScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeQuiklyAnalytics,
+      builder: (context, state) => const QuiklyAnalysisScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeAnalysis,
+      builder: (context, state) => const AnalysisScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeSearch,
+      builder: (context, state) => const SearchScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeCalendar,
+      builder: (context, state) => const CalendarScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeTransaction,
+      builder: (context, state) => const TransactionScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeCategories,
+      builder: (context, state) => const CategoriesScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeFood,
+      builder: (context, state) => const FoodScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeAddExpences,
+      builder: (context, state) => const AddExpenseScreen() ,
     ),
   ],
 );
