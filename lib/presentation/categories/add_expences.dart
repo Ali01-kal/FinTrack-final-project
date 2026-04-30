@@ -40,7 +40,7 @@ class AddExpenseScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => context.pop(),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00D19E),
+                          backgroundColor: Colors.amber,
                           padding: const EdgeInsets.symmetric(vertical: 18),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                         ),

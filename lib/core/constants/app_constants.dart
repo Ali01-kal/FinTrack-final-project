@@ -26,6 +26,25 @@ class AppConstants {
   static const String routeCategories = '/categories';
   static const String routeFood = '/food';
   static const String routeAddExpences = '/addexpense';
+  static const String routeTransport = '/transport';
+  static const String routeGroceries = '/groceries';
+  static const String routeRent = '/rent';
+  static const String routeGifts = '/gifts';
+  static const String routeMedicine = '/medicine';
+  static const String routeEntertainment = '/entertainment';
+  static const String routeSaving = '/saving';
+  static const String routeDetailTravel = '/detailTravel';
+  static const String routeAddSavings = '/addSavings';
+  static const String routeNewHouse = '/newHouse';
+  static const String routeCarDetail = '/carDetail';
+  static const String routeWeddingDetail = '/weddingDetail';
+  static const String routeProfile = '/profile';
+  static const String routeEditProfile = '/editProfile';
+  static const String routeSettings = '/settings';
+  static const String routeNotificationSettings = '/notificationSettings';
+  static const String routePasswordSettings = '/passwordSettings';
+  static const String routeDeleteAccount = '/deleteAccount';
+  static const String routeHelpCenter = '/helpCenter';
 
   // Ограничения валидации
   static const int kMinPasswordLength = 6;

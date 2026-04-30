@@ -148,6 +148,7 @@ class HomeScreen extends StatelessWidget {
           }
           if(index == 2) context.go('/transaction');
           if(index == 3) context.go('/categories');
+          if(index == 4) context.go('/profile');
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),

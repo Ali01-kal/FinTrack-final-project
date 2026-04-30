@@ -88,9 +88,28 @@ import 'package:fintrack/presentation/analysis/quikly_analysis_screen.dart';
 import 'package:fintrack/presentation/analysis/search_screen.dart';
 import 'package:fintrack/presentation/auth/welcome_screen.dart';
 import 'package:fintrack/presentation/categories/add_expences.dart';
+import 'package:fintrack/presentation/categories/add_savings_screen.dart';
+import 'package:fintrack/presentation/categories/car_detail_screen.dart';
 import 'package:fintrack/presentation/categories/categories_screen.dart';
+import 'package:fintrack/presentation/categories/entartainment_screen.dart';
 import 'package:fintrack/presentation/categories/food_screen.dart';
+import 'package:fintrack/presentation/categories/gifts_screen.dart';
+import 'package:fintrack/presentation/categories/groceries_screen.dart';
+import 'package:fintrack/presentation/categories/medicine_screen.dart';
+import 'package:fintrack/presentation/categories/new_house_detail_screen.dart';
+import 'package:fintrack/presentation/categories/rent_screen.dart';
+import 'package:fintrack/presentation/categories/saving_screen.dart';
+import 'package:fintrack/presentation/categories/transport_screen.dart';
+import 'package:fintrack/presentation/categories/travel_detail_screen.dart';
+import 'package:fintrack/presentation/categories/wedding_detail_screen.dart';
 import 'package:fintrack/presentation/notifications/notifications_screen.dart';
+import 'package:fintrack/presentation/profile/delete_account_screen.dart';
+import 'package:fintrack/presentation/profile/edit_profile_screen.dart';
+import 'package:fintrack/presentation/profile/help_center_screen.dart';
+import 'package:fintrack/presentation/profile/notification_settings_screen.dart';
+import 'package:fintrack/presentation/profile/password_settings_screen.dart';
+import 'package:fintrack/presentation/profile/profile_screen.dart';
+import 'package:fintrack/presentation/profile/settings_screen.dart';
 import 'package:fintrack/presentation/splash/splash_screen.dart';
 import 'package:fintrack/presentation/transactions/transactions_screen.dart';
 import 'package:flutter/material.dart';
@@ -165,6 +184,82 @@ final AppRouter = GoRouter(
     GoRoute(
       path: AppConstants.routeAddExpences,
       builder: (context, state) => const AddExpenseScreen() ,
+    ),
+    GoRoute(
+      path: AppConstants.routeTransport,
+      builder: (context, state) => const TransportScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeGroceries,
+      builder: (context, state) => const GroceriesScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeRent,
+      builder: (context, state) => const RentScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeGifts,
+      builder: (context, state) => const GiftsScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeMedicine,
+      builder: (context, state) => const MedicineScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeEntertainment,
+      builder: (context, state) => const EntertainmentScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeSaving,
+      builder: (context, state) => const SavingsScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeDetailTravel,
+      builder: (context, state) => const TravelDetailScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeAddSavings,
+      builder: (context, state) => const AddSavingsScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeNewHouse,
+      builder: (context, state) => const NewHouseDetailScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeCarDetail,
+      builder: (context, state) => const CarDetailScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeWeddingDetail,
+      builder: (context, state) => const WeddingDetailScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeProfile,
+      builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeEditProfile,
+      builder: (context, state) => const EditProfileScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeSettings,
+      builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeNotificationSettings,
+      builder: (context, state) => const NotificationSettingsScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routePasswordSettings,
+      builder: (context, state) => const PasswordSettingsScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeDeleteAccount,
+      builder: (context, state) => const DeleteAccountScreen(),
+    ),
+    GoRoute(
+      path: AppConstants.routeHelpCenter,
+      builder: (context, state) => const HelpCenterScreen(),
     ),
   ],
 );
