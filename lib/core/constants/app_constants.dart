@@ -49,4 +49,10 @@ class AppConstants {
   // Ограничения валидации
   static const int kMinPasswordLength = 6;
   static const int kMaxTitleLength = 100;
+
+
+  // app_constants.dart ішіне қосу
+  static const String kTransactionsBox = 'transactions_box';
+  static const String kUserBox = 'user_box';
+  static const String kCategoriesBox = 'categories_box';
 }

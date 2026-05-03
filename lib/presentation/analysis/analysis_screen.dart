@@ -1,4 +1,9 @@
+import 'package:fintrack/core/constants/app_constants.dart';
+import 'package:fintrack/presentation/blocs/statistics/bloc/statistics_bloc.dart';
+import 'package:fintrack/presentation/blocs/statistics/bloc/statistics_event.dart';
+import 'package:fintrack/presentation/blocs/statistics/bloc/statistics_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AnalysisScreen extends StatefulWidget {
@@ -11,38 +16,40 @@ class AnalysisScreen extends StatefulWidget {
 class _AnalysisScreenState extends State<AnalysisScreen> {
   String selectedPeriod = 'Weekly';
 
-  // Дизайнға сәйкес нақты деректер
-  final Map<String, Map<String, dynamic>> periodData = {
-    'Daily': {
-      'income': '\$4,120.00',
-      'expense': '\$1,187.40',
-      'bars': [40.0, 70.0, 50.0, 90.0, 60.0, 80.0, 45.0],
-      'labels': ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    'Weekly': {
-      'income': '\$11,420.00',
-      'expense': '\$20,000.20',
-      'bars': [50.0, 90.0, 65.0, 85.0],
-      'labels': ['1st Week', '2nd Week', '3rd Week', '4th Week']
-    },
-    'Monthly': {
-      'income': '\$47,200.00',
-      'expense': '\$35,510.20',
-      'bars': [60.0, 40.0, 90.0, 70.0, 55.0, 80.0],
-      'labels': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
-    },
-    'Year': {
-      'income': '\$430,560.00',
-      'expense': '\$320,300.00',
-      'bars': [50.0, 70.0, 95.0, 60.0, 85.0],
-      'labels': ['2019', '2020', '2021', '2022', '2023']
-    },
-  };
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadStatisticsForPeriod(selectedPeriod);
+    });
+  }
+
+  void _loadStatisticsForPeriod(String period) {
+    final now = DateTime.now();
+    DateTime? startDate;
+
+    switch (period) {
+      case 'Daily':
+        startDate = DateTime(now.year, now.month, now.day);
+        break;
+      case 'Weekly':
+        startDate = now.subtract(const Duration(days: 7));
+        break;
+      case 'Monthly':
+        startDate = DateTime(now.year, now.month, 1);
+        break;
+      case 'Year':
+        startDate = DateTime(now.year, 1, 1);
+        break;
+    }
+
+    context.read<StatisticsBloc>().add(
+          LoadStatistics(startDate: startDate, endDate: now),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
-    var currentData = periodData[selectedPeriod]!;
-
     return Scaffold(
       backgroundColor: Colors.amber,
       appBar: AppBar(
@@ -52,8 +59,10 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF1B3D3D)),
           onPressed: () => context.pop(),
         ),
-        title: const Text('Analysis', 
-          style: TextStyle(color: Color(0xFF1B3D3D), fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Analysis',
+          style: TextStyle(color: Color(0xFF1B3D3D), fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         actions: [
           Padding(
@@ -62,161 +71,183 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
               backgroundColor: Colors.white24,
               child: IconButton(
                 icon: const Icon(Icons.notifications_none, color: Color(0xFF1B3D3D)),
-                onPressed: () {},
+                onPressed: () => context.push(AppConstants.routeNotifications),
               ),
             ),
           )
         ],
       ),
       bottomNavigationBar: _buildBottomNav(),
-      body: Column(
-        children: [
-          // 1. Жоғарғы статистикалық блок (Total Balance & Expense)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildTopStat('Total Balance', '\$7,783.00', Icons.account_balance_wallet_outlined),
-                    _buildTopStat('Total Expense', '-\$1,187.40', Icons.analytics_outlined),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                // Прогресс-бар (дизайндағыдай)
-                Stack(
-                  children: [
-                    Container(
-                      height: 8,
-                      width: double.infinity,
-                      decoration: BoxDecoration(color: Colors.white30, borderRadius: BorderRadius.circular(10)),
-                    ),
-                    Container(
-                      height: 8,
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      decoration: BoxDecoration(color: const Color(0xFF1B3D3D), borderRadius: BorderRadius.circular(10)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('30%', style: TextStyle(color: Color(0xFF1B3D3D), fontSize: 10, fontWeight: FontWeight.bold)),
-                    Text('\$20,000.00', style: TextStyle(color: Color(0xFF1B3D3D), fontSize: 10, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('✓ 30% Of Your Expenses, Looks Good.', 
-                    style: TextStyle(color: Color(0xFF1B3D3D), fontSize: 10)),
-                ),
-              ],
-            ),
-            
-          ),
+      body: BlocBuilder<StatisticsBloc, StatisticsState>(
+        builder: (context, state) {
+          // 1. Жүктелу күйі
+          if (state is StatisticsLoading) {
+            return const Center(child: CircularProgressIndicator(color: Color(0xFF1B3D3D)));
+          }
 
-          // 2. Period Selector
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: Colors.white24,
-              borderRadius: BorderRadius.circular(35),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: ['Daily', 'Weekly', 'Monthly', 'Year'].map((period) {
-                bool isSelected = selectedPeriod == period;
-                return GestureDetector(
-                  onTap: () => setState(() => selectedPeriod = period),
+          // 2. Қате шыққан күй
+          if (state is StatisticsError) {
+            return Center(
+              child: Text(state.message, style: const TextStyle(color: Color(0xFF1B3D3D))),
+            );
+          }
+
+          // 3. Деректер жүктелген күй (Осы жерде барлық есептеулер жасалады)
+          if (state is StatisticsLoaded) {
+            final totalIncome = state.totalIncome;
+            final totalExpense = state.totalExpense;
+            final totalBalance = totalIncome - totalExpense;
+            final chartData = _buildChartData(state.categoryTotals);
+            
+            final ratio = totalIncome <= 0 ? 0.0 : (totalExpense / totalIncome).clamp(0.0, 1.0);
+            final ratioPercent = (ratio * 100).toStringAsFixed(0);
+
+            return Column(
+              children: [
+                // Статистика және Прогресс-бар бөлімі
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildTopStat('Total Balance', _formatMoney(totalBalance), Icons.account_balance_wallet_outlined),
+                          _buildTopStat('Total Expense', '-${_formatMoney(totalExpense)}', Icons.analytics_outlined),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      Stack(
+                        children: [
+                          Container(
+                            height: 8,
+                            width: double.infinity,
+                            decoration: BoxDecoration(color: Colors.white30, borderRadius: BorderRadius.circular(10)),
+                          ),
+                          FractionallySizedBox(
+                            widthFactor: ratio,
+                            child: Container(
+                              height: 8,
+                              decoration: BoxDecoration(color: const Color(0xFF1B3D3D), borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('$ratioPercent%', style: const TextStyle(color: Color(0xFF1B3D3D), fontSize: 10, fontWeight: FontWeight.bold)),
+                          Text(_formatMoney(totalIncome), style: const TextStyle(color: Color(0xFF1B3D3D), fontSize: 10, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Период таңдау бөлімі
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(35)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: ['Daily', 'Weekly', 'Monthly', 'Year'].map((period) {
+                      final isSelected = selectedPeriod == period;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() => selectedPeriod = period);
+                          _loadStatisticsForPeriod(period);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: isSelected ? const Color(0xFF00D19E) : Colors.transparent,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Text(
+                            period,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : const Color(0xFF1B3D3D).withOpacity(0.6),
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+
+                // Төменгі ақ блок (График және Карталар)
+                const SizedBox(height: 15),
+                Expanded(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: isSelected ? const Color(0xFF00D19E) : Colors.transparent,
-                      borderRadius: BorderRadius.circular(30),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF4FAF6),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(45)),
                     ),
-                    child: Text(
-                      period,
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : const Color(0xFF1B3D3D).withOpacity(0.6),
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        fontSize: 13,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(25, 35, 25, 25),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Income & Expenses', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B3D3D))),
+                              Row(
+                                children: [
+                                  _buildSmallIcon(Icons.search, () => context.push(AppConstants.routeSearch)),
+                                  const SizedBox(width: 8),
+                                  _buildSmallIcon(Icons.calendar_today_outlined, () => context.push(AppConstants.routeCalendar)),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                          _buildDynamicChart(chartData),
+                          const SizedBox(height: 35),
+                          Row(
+                            children: [
+                              _buildStatCard('Income', _formatMoney(totalIncome), Icons.arrow_outward, const Color(0xFF00D19E)),
+                              const SizedBox(width: 15),
+                              _buildStatCard('Expense', '-${_formatMoney(totalExpense)}', Icons.call_received, Colors.blueAccent),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-
-          const SizedBox(height: 15),
-
-          // 3. Ақ блок (График және Карталар)
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF4FAF6),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(45)),
-              ),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(25, 35, 25, 25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Income & Expenses', 
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B3D3D))),
-                        Row(
-                          children: [
-                            _buildSmallIcon(
-                              Icons.search,
-                              () => context.push('/search'),
-                            ),
-                            const SizedBox(width: 8),
-                            _buildSmallIcon(
-                              Icons.calendar_today_outlined,
-                              () => context.push('/calendar'),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 25),
-                    
-                    // График
-                    _buildDynamicChart(currentData),
-
-                    const SizedBox(height: 35),
-
-                    // Income & Expense карталары
-                    Row(
-                      children: [
-                        _buildStatCard('Income', currentData['income'], Icons.arrow_outward, const Color(0xFF00D19E)),
-                        const SizedBox(width: 15),
-                        _buildStatCard('Expense', currentData['expense'], Icons.call_received, Colors.blueAccent),
-                      ],
-                    ),
-
-                    const SizedBox(height: 30),
-                    const Text('My Targets', 
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B3D3D))),
-                    const SizedBox(height: 15),
-                    // Қосымша транзакциялар немесе мақсаттар осында
-                  ],
                 ),
-              ),
-            ),
-          ),
-        ],
+              ],
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
+
+  // Графикке деректерді дайындау
+  Map<String, dynamic> _buildChartData(Map<String, double> categoryTotals) {
+    if (categoryTotals.isEmpty) {
+      return {'labels': ['No data'], 'bars': [0.0]};
+    }
+
+    final entries = categoryTotals.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    final topEntries = entries.take(6).toList();
+    final maxValue = topEntries.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+
+    return {
+      'labels': topEntries.map((e) => e.key).toList(),
+      'bars': topEntries.map((e) => maxValue == 0 ? 0.0 : (e.value / maxValue) * 100).toList(),
+    };
+  }
+
+  String _formatMoney(double value) => '\$${value.toStringAsFixed(2)}';
 
   Widget _buildTopStat(String title, String amount, IconData icon) {
     return Column(
@@ -245,22 +276,21 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, size: 18, color: const Color(0xFF00D19E)),
-        
       ),
     );
   }
 
   Widget _buildDynamicChart(Map<String, dynamic> data) {
-    List<double> barHeights = data['bars'];
-    List<String> labels = data['labels'];
+    final barHeights = (data['bars'] as List<double>);
+    final labels = (data['labels'] as List<String>);
 
     return Container(
       height: 200,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white, 
+        color: Colors.white,
         borderRadius: BorderRadius.circular(25),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 5))]
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 5))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -271,14 +301,17 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
             children: [
               Container(
                 width: 12,
-                height: barHeights[index] * 1.5, // Биіктік масштабы
+                height: (barHeights[index] * 1.2).clamp(5, 140), // Биіктігін шектеу
                 decoration: BoxDecoration(
                   color: index % 2 == 0 ? const Color(0xFF00D19E) : Colors.blueAccent,
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
               const SizedBox(height: 8),
-              Text(labels[index], style: const TextStyle(fontSize: 9, color: Colors.black45)),
+              SizedBox(
+                width: 46,
+                child: Text(labels[index], textAlign: TextAlign.center, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9, color: Colors.black45)),
+              ),
             ],
           );
         }),
@@ -291,9 +324,9 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: Colors.white, 
+          color: Colors.white,
           borderRadius: BorderRadius.circular(25),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 5))]
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 5))],
         ),
         child: Column(
           children: [
@@ -315,7 +348,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
   Widget _buildBottomNav() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      currentIndex: 1, // Analysis белсенді болып тұруы керек
+      currentIndex: 1,
       selectedItemColor: const Color(0xFF00D19E),
       unselectedItemColor: Colors.black26,
       showSelectedLabels: false,
@@ -328,7 +361,11 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
         BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ''),
       ],
       onTap: (index) {
-        if (index == 0) context.go('/home'); // Home-ға қайту үшін
+        if (index == 0) context.go(AppConstants.routeHome);
+        if (index == 1) context.go(AppConstants.routeAnalysis);
+        if (index == 2) context.go(AppConstants.routeTransaction);
+        if (index == 3) context.go(AppConstants.routeCategories);
+        if (index == 4) context.go(AppConstants.routeProfile);
       },
     );
   }

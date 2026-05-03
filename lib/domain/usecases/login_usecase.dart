@@ -1,30 +1,21 @@
-// // Слой: domain | Назначение: use case входа по email и паролю
 
-// import 'package:equatable/equatable.dart';
-// import '../entities/user.dart';
-// import '../repositories/auth_repository.dart';
-// import 'base_usecase.dart';
+import 'package:fintrack/domain/entities/user_entity.dart';
+import 'package:fintrack/domain/repositories/auth_repository.dart';
+import 'base_usecase.dart';
 
-// class LoginUseCase implements UseCase<User, LoginParams> {
-//   LoginUseCase(this._repository);
+class LoginParams {
+  final String email;
+  final String password;
+  LoginParams({required this.email, required this.password});
+}
 
-//   final AuthRepository _repository;
+class LoginUseCase implements BaseUseCase<UserEntity?, LoginParams> {
+  final AuthRepository repository;
 
-//   @override
-//   Future<User> call(LoginParams params) {
-//     return _repository.login(
-//       email: params.email,
-//       password: params.password,
-//     );
-//   }
-// }
+  LoginUseCase(this.repository);
 
-// class LoginParams extends Equatable {
-//   const LoginParams({required this.email, required this.password});
-
-//   final String email;
-//   final String password;
-
-//   @override
-//   List<Object?> get props => [email, password];
-// }
+  @override
+  Future<UserEntity?> execute(LoginParams params) async {
+    return await repository.signIn(params.email, params.password);
+  }
+}

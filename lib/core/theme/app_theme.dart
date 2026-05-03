@@ -1,37 +1,43 @@
-// Слой: core | Назначение: светлая тема Material 3
-
 import 'package:flutter/material.dart';
 
 class AppTheme {
   AppTheme._();
 
+  // Негізгі түстер
+  static const Color primaryGreen = Color(0xFF00D09E);
+  static const Color darkBackground = Color(0xFF121212);
+
+  // Светлый тема
   static ThemeData get light => ThemeData(
         useMaterial3: true,
+        brightness: Brightness.light,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6750A4),
+          seedColor: primaryGreen,
+          primary: primaryGreen,
           brightness: Brightness.light,
         ),
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        ),
-        cardTheme: CardThemeData(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
+        scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           centerTitle: true,
+          backgroundColor: Colors.white,
           elevation: 0,
         ),
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-            minimumSize: const Size.fromHeight(48),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
+      );
+
+  // Темный тема
+  static ThemeData get dark => ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryGreen,
+          primary: primaryGreen,
+          brightness: Brightness.dark,
+        ),
+        scaffoldBackgroundColor: darkBackground,
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          backgroundColor: darkBackground,
+          elevation: 0,
         ),
       );
 }

@@ -1,36 +1,20 @@
-// // Слой: domain | Назначение: use case регистрации нового пользователя
+import 'package:fintrack/domain/entities/user_entity.dart';
+import 'package:fintrack/domain/repositories/auth_repository.dart';
+import 'base_usecase.dart';
 
-// import 'package:equatable/equatable.dart';
-// import '../entities/user.dart';
-// import '../repositories/auth_repository.dart';
-// import 'base_usecase.dart';
+class RegisterParams {
+  final String email;
+  final String password;
+  RegisterParams({required this.email, required this.password});
+}
 
-// class RegisterUseCase implements UseCase<User, RegisterParams> {
-//   RegisterUseCase(this._repository);
+class RegisterUseCase implements BaseUseCase<UserEntity?, RegisterParams> {
+  final AuthRepository repository;
 
-//   final AuthRepository _repository;
+  RegisterUseCase(this.repository);
 
-//   @override
-//   Future<User> call(RegisterParams params) {
-//     return _repository.register(
-//       name: params.name,
-//       email: params.email,
-//       password: params.password,
-//     );
-//   }
-// }
-
-// class RegisterParams extends Equatable {
-//   const RegisterParams({
-//     required this.name,
-//     required this.email,
-//     required this.password,
-//   });
-
-//   final String name;
-//   final String email;
-//   final String password;
-
-//   @override
-//   List<Object?> get props => [name, email, password];
-// }
+  @override
+  Future<UserEntity?> execute(RegisterParams params) async {
+    return await repository.signUp(params.email, params.password);
+  }
+}

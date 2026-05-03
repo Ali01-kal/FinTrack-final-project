@@ -1,22 +1,9 @@
-import '../entities/transaction_entity.dart'; // Егер кейін керек болса
+import '../entities/user_entity.dart';
 
 abstract class AuthRepository {
-  // Тіркелу
-  Future<void> register({
-    required String name,
-    required String email,
-    required String password,
-  });
-
-  // Кіру
-  Future<void> login({
-    required String email,
-    required String password,
-  });
-
-  // Шығу
-  Future<void> logout();
-
-  // Сессияны тексеру
-  Future<bool> isAuthenticated();
+  Future<UserEntity?> signIn(String email, String password);
+  Future<UserEntity?> signUp(String email, String password);
+  Future<void> signOut();
+  Future<UserEntity?> getCurrentUser();
+  Stream<UserEntity?> get authStateChanges;
 }

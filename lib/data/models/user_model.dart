@@ -1,12 +1,30 @@
-// Слой: data | Назначение: определение Drift-таблицы Users
+import '../../domain/entities/user_entity.dart';
 
-import 'package:drift/drift.dart';
+class UserModel extends UserEntity {
+  UserModel({
+    required super.id,
+    required super.email,
+    super.name,
+    super.photoUrl,
+  });
 
-// Drift-таблица пользователей (генерирует UserData, UsersCompanion)
-class Users extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  TextColumn get email => text().unique()();
-  TextColumn get password => text()();
-  TextColumn get name => text()();
-  DateTimeColumn get createdAt => dateTime()();
+  // Firebase-тен келетін JSON-ды объектіге айналдыру
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'] ?? '',
+      email: json['email'] ?? '',
+      name: json['name'],
+      photoUrl: json['photoUrl'],
+    );
+  }
+
+  // Firestore-ға немесе басқа жерге жіберу үшін JSON-ға айналдыру
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'name': name,
+      'photoUrl': photoUrl,
+    };
+  }
 }

@@ -94,3 +94,65 @@
 //     emit(const AuthUnauthenticated());
 //   }
 // }
+
+
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../domain/repositories/auth_repository.dart';
+import 'auth_event.dart';
+import 'auth_state.dart';
+
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final AuthRepository authRepository;
+
+  AuthBloc({required this.authRepository}) : super(AuthInitial()) {
+    
+    // Сессияны тексеру
+    on<AuthCheckRequested>((event, emit) async {
+      final user = await authRepository.getCurrentUser();
+      if (user != null) {
+        emit(Authenticated(user));
+      } else {
+        emit(Unauthenticated());
+      }
+    });
+
+    // Жүйеге кіру
+    on<AuthSignInRequested>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final user = await authRepository.signIn(event.email, event.password);
+        if (user != null) {
+          emit(Authenticated(user));
+        } else {
+          emit(AuthError("Қате: Пайдаланушы табылмады"));
+        }
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    // Жүйеден шығу
+    on<AuthSignOutRequested>((event, emit) async {
+      await authRepository.signOut();
+      emit(Unauthenticated());
+    });
+
+    on<AuthSignUpRequested>((event, emit) async {
+      emit(AuthLoading()); // Жүктеу күйін қосамыз
+       try {
+       // Repository арқылы тіркелуді шақырамыз
+       final user = await authRepository.signUp(event.email, event.password);
+    
+       if (user != null) {
+         emit(Authenticated(user)); // Сәтті тіркелсе - Authenticated
+        } else {
+          emit(AuthError("Тіркелу кезінде қате орын алды"));
+      }
+        } catch (e) {
+          // Firebase-тен келетін қателерді ұстау
+        emit(AuthError(e.toString()));
+      }
+   });
+ }
+}

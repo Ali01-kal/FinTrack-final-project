@@ -122,10 +122,12 @@ import '../../presentation/home/home_screen.dart';
 import '../../presentation/statistics/statistics_screen.dart';
 
 // Блоксыз қарапайым роутер
-final AppRouter = GoRouter(
+final appRouter = GoRouter(
   initialLocation: AppConstants.routeSplash,
+  debugLogDiagnostics: true,
   routes: [
     GoRoute(
+      name: 'welcome',
       path: AppConstants.routeWelcome,
       builder: (context, state) => const WelcomeScreen(),
     ),
@@ -134,6 +136,7 @@ final AppRouter = GoRouter(
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
+      name: 'login',
       path: AppConstants.routeLogin,
       builder: (context, state) => const LoginScreen(),
     ),

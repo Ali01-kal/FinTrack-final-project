@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
-}
-
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  @override
   Widget build(BuildContext context) {
+    // Темадан негізгі түстерді аламыз
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      // Scaffold-тың өзі темаға байланысты түсін өзгертеді
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -20,89 +18,85 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Image.asset(
+                Image.asset(
                   "assets/images/vector2.png",
+                  width: 200, // Өлшемін нақтыладық
                 ),
-
-                const SizedBox(height: 10,),
-
-                const Text(
+                const SizedBox(height: 10),
+                Text(
                   "FinTrack",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 36,
+                  style: theme.textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
+                    // Түсі автоматты түрде темаға (ақ/қара) қарай өзгереді
                   ),
                 ),
-
-                const SizedBox(height: 20,),
-
-                 SizedBox(
-                  width: double.infinity,
-                  height: 55,
-                  child: ElevatedButton(
-                    onPressed: (){
-                      context.go('/login');
-                    }, 
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(30),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const  Text(
-                      "Log In",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    )),
-                ),
-
-                const SizedBox(height: 15,),
-
+                const SizedBox(height: 40),
+                
+                // Log In батырмасы (Primary Style)
                 SizedBox(
                   width: double.infinity,
                   height: 55,
                   child: ElevatedButton(
-                    onPressed: (){
-                      context.go('/register');
+                    onPressed: () {
+                      debugPrint('Welcome -> login tap');
+                      context.go('/login');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      elevation: 0,
+                      backgroundColor: theme.colorScheme.primary, // Жасыл түс (AppTheme-ден)
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
-                      )
-                    ), 
-                    child: const  Text(
+                      ),
+                    ),
+                    child: const Text(
+                      "Log In",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                
+                // Sign Up батырмасы (Secondary Style)
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: OutlinedButton( // Дизайнды ажырату үшін Outlined қолданған дұрыс
+                    onPressed: () => context.go('/register'),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: theme.colorScheme.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: Text(
                       "Sign Up",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18, 
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: theme.colorScheme.primary,
                       ),
-                    )),
+                    ),
+                  ),
                 ),
-
                 const SizedBox(height: 20),
-
                 
                 TextButton(
-                onPressed: (){},
-                child: const Text(
-                  'Forgot Password?',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                  onPressed: () {
+                    // Forgot password логикасы кейінірек
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: TextStyle(
+                      color: theme.colorScheme.onBackground.withOpacity(0.7),
+                      fontSize: 16,
+                    ),
                   ),
-                ))
+                )
               ],
             ),
           ),
-        )),
+        ),
+      ),
     );
   }
 }

@@ -1,15 +1,9 @@
 // Слой: domain | Назначение: базовый абстрактный класс use case
 
-import 'package:equatable/equatable.dart';
+import 'package:dartz/dartz.dart'; // Failure немесе Success қайтару үшін ыңғайлы
 
-abstract class UseCase<Output, Params> {
-  Future<Output> call(Params params);
+abstract class BaseUseCase<Type, Params> {
+  Future<Type> execute(Params params);
 }
 
-// Используется для use case без входных параметров
-class NoParams extends Equatable {
-  const NoParams();
-
-  @override
-  List<Object?> get props => [];
-}
+class NoParams {}

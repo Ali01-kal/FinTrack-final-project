@@ -1,16 +1,17 @@
 // // Слой: domain | Назначение: use case проверки сохранённой сессии при старте приложения
 
-// import '../entities/user.dart';
-// import '../repositories/auth_repository.dart';
-// import 'base_usecase.dart';
+import 'package:fintrack/domain/entities/user_entity.dart';
+import 'package:fintrack/domain/repositories/auth_repository.dart';
 
-// class CheckSessionUseCase implements UseCase<User?, NoParams> {
-//   CheckSessionUseCase(this._repository);
+import 'base_usecase.dart';
 
-//   final AuthRepository _repository;
+class CheckSessionUseCase implements BaseUseCase<UserEntity?, NoParams> {
+  final AuthRepository repository;
 
-//   @override
-//   Future<User?> call(NoParams params) {
-//     return _repository.checkSession();
-//   }
-// }
+  CheckSessionUseCase(this.repository);
+
+  @override
+  Future<UserEntity?> execute(NoParams params) async {
+    return await repository.getCurrentUser();
+  }
+}
