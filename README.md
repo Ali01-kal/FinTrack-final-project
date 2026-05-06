@@ -69,4 +69,4 @@
 > **Важно:** Готовый APK-файл в release-режиме можно скачать в разделе [Releases](https://github.com/Ali01-kal/FinTrack-final-project/releases).
 
 ---
-**Автор:** Ахметтали (Айсұлтан) — Flutter Developer (Tech Orda / Data Group Academy).
+**Автор:** Ахметәли Қалыбек — Flutter Developer (Tech Orda / Data Group Academy).
