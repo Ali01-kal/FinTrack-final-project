@@ -5,7 +5,7 @@ abstract class TransactionLocalDataSource {
   Future<List<TransactionModel>> getCachedTransactions();
   Future<void> cacheTransaction(TransactionModel transaction);
   Future<void> deleteTransaction(String id);
-  Future<void> updateTransaction(TransactionModel transaction); // Жаңарту функциясы
+  Future<void> updateTransaction(TransactionModel transaction); 
 }
 
 class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {

@@ -12,6 +12,7 @@ class AppConstants {
 
   // Маршруты
   static const String routeSplash = '/splash';
+  static const String routeOnboarding = '/onboarding';
   static const String routeWelcome = '/welcome';
   static const String routeLogin = '/login';
   static const String routeRegister = '/register';
@@ -45,14 +46,19 @@ class AppConstants {
   static const String routePasswordSettings = '/passwordSettings';
   static const String routeDeleteAccount = '/deleteAccount';
   static const String routeHelpCenter = '/helpCenter';
+  static const String routeIncome = '/income';
 
-  // Ограничения валидации
+ 
   static const int kMinPasswordLength = 6;
   static const int kMaxTitleLength = 100;
 
 
-  // app_constants.dart ішіне қосу
+
   static const String kTransactionsBox = 'transactions_box';
   static const String kUserBox = 'user_box';
   static const String kCategoriesBox = 'categories_box';
+  static const String kThemeModeKey = 'theme_mode';
+  static const String kLastRouteKey = 'last_route';
+  static const String kExpenseReminderEnabledKey = 'expense_reminder_enabled';
+  static const String kOnboardingDoneKey = 'onboarding_done';
 }

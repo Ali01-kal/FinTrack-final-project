@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  // Негізгі түстер
+ //main colors
   static const Color primaryGreen = Color(0xFF00D09E);
   static const Color darkBackground = Color(0xFF121212);
 
-  // Светлый тема
+  // light theme
   static ThemeData get light => ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
@@ -22,9 +22,15 @@ class AppTheme {
           backgroundColor: Colors.white,
           elevation: 0,
         ),
+        cardColor: Colors.white,
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: primaryGreen,
+          unselectedItemColor: Colors.black45,
+        ),
       );
 
-  // Темный тема
+  // dark theme
   static ThemeData get dark => ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
@@ -33,11 +39,23 @@ class AppTheme {
           primary: primaryGreen,
           brightness: Brightness.dark,
         ),
-        scaffoldBackgroundColor: darkBackground,
+        scaffoldBackgroundColor: const Color(0xFF0D0D0D),
         appBarTheme: const AppBarTheme(
           centerTitle: true,
-          backgroundColor: darkBackground,
+          backgroundColor: Color(0xFF0D0D0D),
           elevation: 0,
+        ),
+        cardColor: const Color(0xFF1A1A1A),
+        dividerColor: Colors.white24,
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.white70),
+          titleLarge: TextStyle(color: Colors.white),
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF111111),
+          selectedItemColor: primaryGreen,
+          unselectedItemColor: Colors.white38,
         ),
       );
 }

@@ -21,7 +21,7 @@ class TransactionModel extends TransactionEntity {
   final String categoryId;
   
   @HiveField(5)
-  final String typeString; // 'income' немесе 'expense'
+  final String typeString; 
 
   TransactionModel({
     required this.id,
@@ -39,7 +39,6 @@ class TransactionModel extends TransactionEntity {
           type: typeString == 'income' ? TransactionType.income : TransactionType.expense,
         );
 
-  // Entity-ден Model-ге ауыстыру (Data Layer-ге дерек келгенде)
   factory TransactionModel.fromEntity(TransactionEntity entity) {
     return TransactionModel(
       id: entity.id,
@@ -51,7 +50,6 @@ class TransactionModel extends TransactionEntity {
     );
   }
 
-  // ID-ді жаңарту үшін (мысалы, Uuid беру кезінде)
   TransactionModel copyWithId(String newId) {
     return TransactionModel(
       id: newId,

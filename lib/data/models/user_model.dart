@@ -8,7 +8,7 @@ class UserModel extends UserEntity {
     super.photoUrl,
   });
 
-  // Firebase-тен келетін JSON-ды объектіге айналдыру
+  
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] ?? '',

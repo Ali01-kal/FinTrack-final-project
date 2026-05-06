@@ -6,3 +6,8 @@ class LoadStatistics extends StatisticsEvent {
 
   LoadStatistics({this.startDate, this.endDate});
 }
+
+class LoadStatisticsByPeriod extends StatisticsEvent {
+  final String period;
+  LoadStatisticsByPeriod(this.period);
+}

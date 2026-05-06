@@ -76,6 +76,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<UserEntity?> updateCurrentUser(UserEntity user) async {
+    final updated = UserModel(
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      photoUrl: user.photoUrl,
+    );
+    await localDataSource.saveUser(updated);
+    return updated;
+  }
+
+  @override
   Future<void> signOut() async {
     await remoteDataSource.signOut();
     await localDataSource.clear();
@@ -83,11 +95,10 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<UserEntity?> getCurrentUser() async {
-    // Алдымен Hive-тан (local) тексереміз, бұл жылдамырақ
+    
     final localUser = await localDataSource.getUser();
     if (localUser != null) return localUser;
 
-    // Егер жоқ болса, Firebase-тен (remote) тексереміз
     final remoteUser = await remoteDataSource.getCurrentUser();
     if (remoteUser != null) {
       await localDataSource.saveUser(remoteUser);
@@ -97,8 +108,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Stream<UserEntity?> get authStateChanges {
-    // Бұл жерде Firebase-тің өзіндік Stream-ін қайтаруға болады
-    // Бірақ қазірше MVP үшін қарапайым нұсқасын қалдырайық
+
     throw UnimplementedError();
   }
 }

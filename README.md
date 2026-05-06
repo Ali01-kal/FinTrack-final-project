@@ -1,172 +1,69 @@
-# Flutter Clean Architecture Template
+# 💰 FinTrack — Personal Capital Management System
 
-Стартовый шаблон Flutter-приложения с Clean Architecture, BLoC, Drift (SQLite), GoRouter и fl_chart.
-
----
-
-## Технический стек
-
-| Слой | Технология |
-|------|-----------|
-| UI | Flutter + Material 3 |
-| State Management | flutter_bloc + equatable |
-| Навигация | go_router |
-| Локальная БД | Drift (SQLite) |
-| HTTP | Dio |
-| Графики | fl_chart |
-| Авторизация | Локальная (SharedPreferences) |
-| Линтер | flutter_lints |
+**FinTrack** — это мобильное приложение для стратегического управления личным капиталом, контроля расходов и повышения финансовой грамотности. Проект разработан в рамках программы **Tech Orda 2025/26** в **Data Group Academy** как финальная работа.
 
 ---
 
-## Быстрый старт
+## 🚀 Основной функционал
 
-```bash
-# 1. Установить зависимости
-flutter pub get
-
-# 2. Сгенерировать Drift-код (обязательно!)
-dart run build_runner build --delete-conflicting-outputs
-
-# 3. Запустить приложение
-flutter run
-```
-
-> **Важно:** без шага 2 приложение не скомпилируется — `app_database.g.dart` должен быть создан build_runner.
+*   **📊 Формирование капитала:** Отслеживание динамики накоплений в реальном времени на основе доходов и расходов.
+*   **🔔 Смарт-уведомления:** Ежедневные напоминания о внесении данных для поддержания 100% точности учета.
+*   **📄 PDF-Отчеты:** Генерация профессионального финансового аудита за месяц в формате PDF.
+*   **🔍 Интеллектуальный поиск:** Быстрая фильтрация транзакций по категориям, датам и типам операций.
+*   **🌙 Adaptive UI:** Полная поддержка Dark и Light режимов интерфейса.
 
 ---
 
-## Структура проекта
+## 🛠 Технологический стек
 
-```
-lib/
-├── core/
-│   ├── constants/      # AppConstants — ключи, маршруты, лимиты
-│   ├── router/         # GoRouter с редиректом по AuthBloc
-│   ├── theme/          # AppTheme — Material 3, светлая тема
-│   ├── utils/          # Validators — валидаторы для форм
-│   └── widgets/        # CustomTextField, LoadingButton
-│
-├── data/
-│   ├── datasources/
-│   │   ├── app_database.dart           # @DriftDatabase + маппер-расширения
-│   │   ├── auth_local_datasource.dart  # Drift + SharedPreferences
-│   │   └── item_local_datasource.dart  # Drift CRUD-запросы
-│   ├── models/
-│   │   ├── user_model.dart   # Drift-таблица Users
-│   │   └── item_model.dart   # Drift-таблица Items + TypeConverter
-│   └── repositories/
-│       ├── auth_repository_impl.dart
-│       └── item_repository_impl.dart
-│
-├── domain/
-│   ├── entities/
-│   │   ├── user.dart    # Чистый Dart-класс, без Flutter
-│   │   └── item.dart    # Чистый Dart-класс + enum ItemStatus
-│   ├── repositories/
-│   │   ├── auth_repository.dart   # abstract class
-│   │   └── item_repository.dart   # abstract class
-│   └── usecases/
-│       ├── base_usecase.dart      # UseCase<Output, Params> + NoParams
-│       ├── login_usecase.dart
-│       ├── register_usecase.dart
-│       ├── check_session_usecase.dart
-│       ├── get_all_items_usecase.dart
-│       ├── create_item_usecase.dart
-│       ├── update_item_usecase.dart
-│       ├── delete_item_usecase.dart
-│       └── search_items_usecase.dart
-│
-├── presentation/
-│   ├── blocs/
-│   │   ├── auth/   # AuthBloc (события + состояния + логика)
-│   │   └── item/   # ItemBloc (события + состояния + логика)
-│   └── screens/
-│       ├── splash_screen.dart     # Проверка сессии → редирект
-│       ├── login_screen.dart      # Форма входа + BlocConsumer
-│       ├── register_screen.dart   # Форма регистрации
-│       ├── home_screen.dart       # Список Items + поиск + фильтр
-│       └── analytics_screen.dart  # BarChart (fl_chart)
-│
-└── main.dart   # BlocObserver, DI вручную, MultiBlocProvider
-```
+*   **Framework:** Flutter SDK (Dart)
+*   **State Management:** BLoC (Business Logic Component)
+*   **Architecture:** Clean Architecture (Data, Domain, Presentation layers)
+*   **Database:** SQLite (Local storage)
 
 ---
 
-## Правила архитектуры
+## 🏗 Архитектура
 
-- `domain/` — только Dart, **никаких** Flutter-импортов
-- `presentation/` — знает только `domain/`, не знает об источниках данных
-- Репозитории — через `abstract class` интерфейсы
-- `setState` — только для локального UI-состояния (видимость пароля, фокус)
-
----
-
-## Как добавить новую сущность (5 шагов)
-
-### 1. Domain — сущность и интерфейс
-
-```dart
-// lib/domain/entities/product.dart
-class Product extends Equatable { ... }
-
-// lib/domain/repositories/product_repository.dart
-abstract class ProductRepository { ... }
-```
-
-### 2. Domain — use cases
-
-```dart
-// lib/domain/usecases/get_all_products_usecase.dart
-class GetAllProductsUseCase implements UseCase<List<Product>, NoParams> { ... }
-```
-
-### 3. Data — модель (Drift-таблица)
-
-```dart
-// lib/data/models/product_model.dart
-class Products extends Table { ... }
-```
-
-Добавить `Products` в `@DriftDatabase(tables: [Users, Items, Products])` в `app_database.dart`, затем:
-
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
-
-### 4. Data — datasource и репозиторий
-
-```dart
-// lib/data/datasources/product_local_datasource.dart
-class ProductLocalDatasource { ... }
-
-// lib/data/repositories/product_repository_impl.dart
-class ProductRepositoryImpl implements ProductRepository { ... }
-```
-
-### 5. Presentation — Bloc и экран
-
-```dart
-// lib/presentation/blocs/product/product_bloc.dart
-class ProductBloc extends Bloc<ProductEvent, ProductState> { ... }
-
-// lib/presentation/screens/products_screen.dart
-class ProductsScreen extends StatelessWidget { ... }
-```
-
-Добавить маршрут в `app_router.dart` и `BlocProvider` в `main.dart`.
+Проект построен на принципах **Clean Architecture**, что обеспечивает тестируемость и чистоту кода:
+1.  **Domain Layer:** Бизнес-логика, сущности (Entities) и Use Case-ы.
+2.  **Data Layer:** Реализация репозиториев (Repository Pattern) и работа с локальной базой данных.
+3.  **Presentation Layer:** UI-компоненты и логика отображения, управляемая через BLoC.
 
 ---
 
-## Тесты
+## 📸 Скриншоты (Screenshots)
 
-```bash
-flutter test
-```
+| 1. Welcome screen | 2. Аналитика | 3. Транзакция |
+| :---: | :---: | :---: |
+| ![Welcome](assets/image-2.png) | ![Analys](assets/image-1.png) | ![Transaction](assets/assets/images.png) |
 
-Тесты находятся в `test/`:
-- `test/usecases/login_usecase_test.dart` — LoginUseCase (успех, неверный пароль)
-- `test/usecases/register_usecase_test.dart` — RegisterUseCase (успех, дубль email)
-- `test/blocs/item_bloc_test.dart` — ItemBloc (загрузка, создание, ошибка)
+*(Примечание: Скриншоты доступны в папке `assets/` репозитория)*
 
-Mock-объекты создаются через `mocktail`, тесты BLoC — через `bloc_test`.
+---
+
+## 📦 Инструкция по запуску (Setup Guide)
+
+Для запуска проекта на вашем локальном устройстве выполните следующие шаги:
+
+1.  **Клонируйте репозиторий:**
+    ```bash
+    git clone [https://github.com/Ali01-kal/FinTrack-final-project.git](https://github.com/Ali01-kal/FinTrack-final-project.git)
+    ```
+2.  **Перейдите в директорию проекта:**
+    ```bash
+    cd FinTrack-final-project
+    ```
+3.  **Установите все необходимые зависимости:**
+    ```bash
+    flutter pub get
+    ```
+4.  **Запустите приложение на эмуляторе или реальном устройстве:**
+    ```bash
+    flutter run
+    ```
+
+> **Важно:** Готовый APK-файл в release-режиме можно скачать в разделе [Releases](https://github.com/Ali01-kal/FinTrack-final-project/releases).
+
+---
+**Автор:** Ахметтали (Айсұлтан) — Flutter Developer (Tech Orda / Data Group Academy).

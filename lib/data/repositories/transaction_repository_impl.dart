@@ -4,7 +4,7 @@ import '../../domain/entities/transaction_entity.dart';
 import '../../domain/repositories/transaction_repository.dart';
 
 import '../models/transaction_model.dart';
-import 'package:uuid/uuid.dart'; // ID генерациясы үшін
+import 'package:uuid/uuid.dart'; 
 
 class TransactionRepositoryImpl implements TransactionRepository {
   final TransactionLocalDataSource localDataSource;
@@ -14,14 +14,14 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<List<TransactionEntity>> getAllTransactions() async {
-    // Hive-тан моделдерді аламыз және оларды Entity-ге айналдырамыз
+    
     final models = await localDataSource.getCachedTransactions();
-    return models; // TransactionModel қазірдің өзінде TransactionEntity-ден мұраланған
+    return models; 
   }
 
   @override
   Future<void> addTransaction(TransactionEntity transaction) async {
-    // Егер ID бос болса, жаңа ID береміз (Uuid)
+    
     final id = transaction.id.isEmpty ? _uuid.v4() : transaction.id;
     
     final model = TransactionModel.fromEntity(transaction).copyWithId(id);

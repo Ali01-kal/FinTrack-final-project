@@ -20,6 +20,7 @@ import 'package:fintrack/domain/repositories/transaction_repository.dart';
 // Blocs
 import 'package:fintrack/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fintrack/presentation/blocs/export/bloc/export_bloc.dart';
+import 'package:fintrack/presentation/blocs/home/bloc/home_bloc.dart';
 import 'package:fintrack/presentation/blocs/statistics/bloc/statistics_bloc.dart';
 import 'package:fintrack/presentation/blocs/theme/bloc/theme_bloc.dart';
 import 'package:fintrack/presentation/blocs/transaction/bloc/transaction_bloc.dart';
@@ -27,14 +28,15 @@ import 'package:fintrack/presentation/blocs/transaction/bloc/transaction_bloc.da
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  //! 1. Блоктар (Factory - әр шақырғанда жаңа инстанс)
+
   sl.registerFactory(() => ThemeBloc());
   sl.registerFactory(() => AuthBloc(authRepository: sl()));
   sl.registerFactory(() => TransactionBloc(repository: sl()));
+  sl.registerFactory(() => HomeBloc(repository: sl()));
   sl.registerFactory(() => StatisticsBloc(repository: sl()));
   sl.registerFactory(() => ExportBloc(repository: sl()));
 
-  //! 2. Репозиторийлер (LazySingleton)
+
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       remoteDataSource: sl(),
@@ -43,14 +45,13 @@ Future<void> init() async {
   );
 
   sl.registerLazySingleton<TransactionRepository>(
-    () => TransactionRepositoryImpl(sl()), // LocalDataSource-ты sl() арқылы береді
+    () => TransactionRepositoryImpl(sl()), 
   );
 
   sl.registerLazySingleton<GoRouter>(() => appRouter);
 
-  //! 3. Деректер көздері
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(sl()), // FirebaseAuth береді
+    () => AuthRemoteDataSourceImpl(sl()), 
   );
   
   sl.registerLazySingleton<AuthLocalDataSource>(
@@ -61,7 +62,7 @@ Future<void> init() async {
     () => TransactionLocalDataSourceImpl(),
   );
 
-  //! 4. Сыртқы библиотекалар
+
   sl.registerLazySingleton(() => FirebaseAuth.instance);
-  // sl.registerLazySingleton(() => FirebaseFirestore.instance);
+
 }

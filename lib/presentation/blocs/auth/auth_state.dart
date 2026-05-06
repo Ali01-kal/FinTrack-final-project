@@ -60,3 +60,8 @@ class AuthError extends AuthState {
   final String message;
   AuthError(this.message);
 }
+
+class AuthProfileUpdateSuccess extends AuthState {
+  final UserEntity user;
+  AuthProfileUpdateSuccess(this.user);
+}
