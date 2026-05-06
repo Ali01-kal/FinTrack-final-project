@@ -36,7 +36,8 @@
 
 | 1. Welcome screen | 2. Аналитика | 3. Транзакция |
 | :---: | :---: | :---: |
-| ![Welcome](assets/image-2.png) | ![Analys](assets/image-1.png) | ![Transaction](assets/assets/images.png) |
+| ![Welcome](<img width="488" height="1011" alt="Снимок экрана 2026-05-06 162812" src="https://github.com/user-attachments/assets/e3bf09a6-2969-4228-8456-b3072e7b3c57" />
+) | ![Analys](assets/image-1.png) | ![Transaction](assets/assets/images.png) |
 
 *(Примечание: Скриншоты доступны в папке `assets/` репозитория)*
 
